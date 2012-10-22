@@ -24,7 +24,12 @@ import java.util.List
 import javax.jdo.JDOHelper
 
 class Globals {
-  static MemoryCredentialStore credentialStore = new MemoryCredentialStore()
+  static private List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables")
+  static private MemoryCredentialStore credentialStore = new MemoryCredentialStore()
+  static public codeFlow(context) {
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(new JacksonFactory(), context.getResourceAsStream("client_secrets.json")) 
+    return new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build()
+  }
 }
 
 StringWriter writer = new StringWriter()
@@ -33,14 +38,11 @@ MarkupBuilder home = new MarkupBuilder(writer)
 File secrets_file = new File(getClass().getClassLoader().getResource("client_secrets.json").toURI())
 String secrets = FileUtils.readFileToString(secrets_file, "UTF-8")
 
-List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables")
-GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(new JacksonFactory(), getClass().getClassLoader().getResourceAsStream("client_secrets.json"))
-GoogleAuthorizationCodeFlow codeFlow = new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets, scopes).setCredentialStore(Globals.credentialStore).setAccessType("offline").build()
-
 GenericUrl callback = new GenericUrl(request.getRequestURL().toString())
 callback.setRawPath("/cite-collection-manager/oauth2callback")
-String url = codeFlow.newAuthorizationUrl().setRedirectUri(callback.build()).build()
-String authorized = (codeFlow.loadCredential('administrator') == null) ? "unauthorized" : "authorized"
+
+String url = Globals.codeFlow(getClass().getClassLoader()).newAuthorizationUrl().setRedirectUri(callback.build()).build()
+String authorized = (Globals.codeFlow(getClass().getClassLoader()).loadCredential('administrator') == null) ? "unauthorized" : "authorized"
 
 home.html {
     head {

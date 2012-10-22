@@ -32,24 +32,14 @@ StringWriter writer = new StringWriter()
 MarkupBuilder home = new MarkupBuilder(writer)
 
 String code = request.getParameter("code")
-GenericUrl url = new GenericUrl(request.getRequestURL().toString())
-url.setRawPath("/cite-collection-manager/oauth2callback")
-String uri = url.build()
+String uri = request.getRequestURL().toString()
 
-File secrets_file = new File(getClass().getClassLoader().getResource("client_secrets.json").toURI())
-String secrets = FileUtils.readFileToString(secrets_file, "UTF-8")
-
-List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables")
-GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(new JacksonFactory(), getClass().getClassLoader().getResourceAsStream("client_secrets.json"))
-// MemoryCredentialStore credentialStore = new MemoryCredentialStore()
-GoogleAuthorizationCodeFlow codeFlow = new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets, scopes).setCredentialStore(Globals.credentialStore).setAccessType("offline").build()
-
-TokenResponse token = codeFlow.newTokenRequest(code).setRedirectUri(uri).execute()
+TokenResponse token = Globals.codeFlow(getClass().getClassLoader()).newTokenRequest(code).setRedirectUri(uri).execute()
 System.out.println(token.getTokenType())
 
-codeFlow.createAndStoreCredential(token,"administrator")
+Globals.codeFlow(getClass().getClassLoader()).createAndStoreCredential(token,"administrator")
 
-String authorized = (codeFlow.loadCredential('administrator') == null) ? "unauthorized" : "authorized"
+String authorized = (Globals.codeFlow(getClass().getClassLoader()).loadCredential('administrator') == null) ? "unauthorized" : "authorized"
 System.out.println(authorized)
 
 response.sendRedirect("/cite-collection-manager/")
