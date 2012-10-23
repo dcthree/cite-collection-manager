@@ -34,12 +34,12 @@ MarkupBuilder home = new MarkupBuilder(writer)
 String code = request.getParameter("code")
 String uri = request.getRequestURL().toString()
 
-TokenResponse token = Globals.codeFlow(getClass().getClassLoader()).newTokenRequest(code).setRedirectUri(uri).execute()
+TokenResponse token = CodeFlow.instance.build().newTokenRequest(code).setRedirectUri(uri).execute()
 System.out.println(token.getTokenType())
 
-Globals.codeFlow(getClass().getClassLoader()).createAndStoreCredential(token,"administrator")
+CodeFlow.instance.build().createAndStoreCredential(token,"administrator")
 
-String authorized = (Globals.codeFlow(getClass().getClassLoader()).loadCredential('administrator') == null) ? "unauthorized" : "authorized"
+String authorized = (CodeFlow.instance.build().loadCredential('administrator') == null) ? "unauthorized" : "authorized"
 System.out.println(authorized)
 
 response.sendRedirect("/cite-collection-manager/")
