@@ -27,12 +27,15 @@ class CodeFlow {
   private MemoryCredentialStore credentialStore = new MemoryCredentialStore()
   private GoogleClientSecrets secrets;
 
+  public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport()
+  public static final JsonFactory JSON_FACTORY = new JacksonFactory()
+
   public setSecrets(context) {
-    secrets = GoogleClientSecrets.load(new JacksonFactory(), context.getResourceAsStream("client_secrets.json"))
+    secrets = GoogleClientSecrets.load(JSON_FACTORY, context.getResourceAsStream("client_secrets.json"))
   }
   
   public build() {
-    return new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), secrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build()
+    return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build()
   }
 
   private static final INSTANCE = new CodeFlow()
