@@ -35,7 +35,8 @@ GenericUrl callback = new GenericUrl(request.getRequestURL().toString())
 callback.setRawPath("/cite-collection-manager/oauth2callback")
 
 String url = CodeFlow.instance.build().newAuthorizationUrl().setRedirectUri(callback.build()).build()
-String authorized = (CodeFlow.instance.build().loadCredential('administrator') == null) ? "unauthorized" : "authorized"
+Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+String authorized = (credential == null) ? "unauthorized" : "authorized"
 
 home.html {
     head {
@@ -48,6 +49,9 @@ home.html {
             h1("CITE Collections interface to data in Google Fusion Tables")
             p("Supply your own home page here.")
             p(authorized)
+            if( credential != null ) {
+              p(credential.getExpiresInSeconds())
+            }
             
             p {
               a (href : url, "Google Auth")
