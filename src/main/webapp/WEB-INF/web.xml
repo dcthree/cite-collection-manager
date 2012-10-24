@@ -31,6 +31,10 @@
         <servlet-name>GroovyServlet</servlet-name>
         <url-pattern>/oauth2callback</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroovyServlet</servlet-name>
+        <url-pattern>/authtable</url-pattern>
+    </servlet-mapping>
     <!--
     <servlet-mapping>
         <servlet-name>AuthorizationServlet</servlet-name>
