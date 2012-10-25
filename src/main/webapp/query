@@ -20,6 +20,8 @@ MarkupBuilder home = new MarkupBuilder(writer)
 String sql = request.getParameter("sql")
 String user_access_token = request.getParameter("access_token")
 
+System.out.println("Proxying: " + sql)
+
 Credential credential = CodeFlow.instance.build().loadCredential('administrator')
 
 Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
