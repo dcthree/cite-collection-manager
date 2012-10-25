@@ -49,9 +49,14 @@ Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTOR
 Userinfo userinfo = oauth2.userinfo().get().execute()
 System.out.println(userinfo.getEmail())
 
-CodeFlow.instance.build().createAndStoreCredential(token,"administrator")
+if (userinfo.getEmail().equals("@administratorEmail@")) {
+  CodeFlow.instance.build().createAndStoreCredential(token,"administrator")
 
-String authorized = (CodeFlow.instance.build().loadCredential('administrator') == null) ? "unauthorized" : "authorized"
-System.out.println(authorized)
+  String authorized = (CodeFlow.instance.build().loadCredential('administrator') == null) ? "unauthorized" : "authorized"
+  System.out.println(authorized)
 
-response.sendRedirect("/cite-collection-manager/")
+  response.sendRedirect("/cite-collection-manager/")
+}
+else {
+  println userinfo.getEmail() + " is not an authorized administrator."
+}
