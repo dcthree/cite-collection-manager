@@ -49,5 +49,5 @@ artifacts {
 
 war {
     from "src/main/webapp"
-    filter(ReplaceTokens, tokens: ['administratorEmail': administratorEmail, 'authorizationTable': authorizationTable])
+    filter(ReplaceTokens, tokens: ['administratorEmail': administratorEmail, 'authorizationTable': authorizationTable, 'capabilitiesUrl': capabilitiesUrl])
 }

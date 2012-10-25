@@ -29,7 +29,7 @@ print """<!DOCTYPE html>
 """
 print "      google_client_id: '" + google_client_id + "',"
 print """
-      capabilities_url: 'cite-collection-editor/capabilities/testedit-capabilities-uneditable.xml'
+      capabilities_url: '@capabilitiesUrl@'
     };
 """
 print "    window.FUSION_TABLES_URI = '" + collection_manager_url + "';"
