@@ -43,7 +43,7 @@ class CodeFlow {
       return false;
     }
     else {
-      return (this.build().loadCredential('administrator') == null)
+      return (this.build().loadCredential('administrator') != null)
     }
   }
 
