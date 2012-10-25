@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.*
+
 apply plugin: 'war'
 apply plugin: 'jetty'
 apply plugin: 'groovy'
@@ -43,4 +45,9 @@ task srcZip(type: Zip, dependsOn: srcCopy) {
 
 artifacts {
     archives srcZip
+}
+
+war {
+    from "src/main/webapp"
+    filter(ReplaceTokens, tokens: ['apiKey': apiKey, 'administratorEmail': administratorEmail, 'authorizationTable': authorizationTable])
 }
