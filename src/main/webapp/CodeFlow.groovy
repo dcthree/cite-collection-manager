@@ -25,7 +25,7 @@ import javax.jdo.JDOHelper
 class CodeFlow {
   private List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables")
   private MemoryCredentialStore credentialStore = new MemoryCredentialStore()
-  private GoogleClientSecrets secrets;
+  public GoogleClientSecrets secrets;
 
   public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport()
   public static final JsonFactory JSON_FACTORY = new JacksonFactory()

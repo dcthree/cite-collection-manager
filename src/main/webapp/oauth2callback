@@ -1,11 +1,14 @@
 import groovy.xml.MarkupBuilder
 import org.apache.commons.io.FileUtils
 
+import com.google.api.services.oauth2.Oauth2
+import com.google.api.services.oauth2.Oauth2.Builder
 import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow
 import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest
 import com.google.api.client.auth.oauth2.BearerToken
 import com.google.api.client.auth.oauth2.Credential
+import com.google.api.client.auth.oauth2.Credential.Builder
 import com.google.api.client.auth.oauth2.MemoryCredentialStore
 import com.google.api.client.auth.oauth2.TokenResponse
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp
@@ -13,6 +16,8 @@ import com.google.api.client.extensions.jdo.auth.oauth2.JdoCredentialStore
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -36,6 +41,13 @@ String uri = request.getRequestURL().toString()
 
 TokenResponse token = CodeFlow.instance.build().newTokenRequest(code).setRedirectUri(uri).execute()
 System.out.println(token.getTokenType())
+
+GoogleCredential credential = new GoogleCredential.Builder().setTransport(CodeFlow.HTTP_TRANSPORT).setJsonFactory(CodeFlow.JSON_FACTORY).setClientSecrets(CodeFlow.instance.secrets).build()
+credential.setFromTokenResponse(token)
+Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
+
+Userinfo userinfo = oauth2.userinfo().get().execute()
+System.out.println(userinfo.getEmail())
 
 CodeFlow.instance.build().createAndStoreCredential(token,"administrator")
 
