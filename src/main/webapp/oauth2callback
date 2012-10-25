@@ -51,7 +51,7 @@ if (userinfo.getEmail().equals("@administratorEmail@")) {
   String authorized = (CodeFlow.instance.build().loadCredential('administrator') == null) ? "unauthorized" : "authorized"
   System.out.println(authorized)
 
-  response.sendRedirect("/cite-collection-manager/")
+  response.sendRedirect("/cite-collection-manager/editor")
 }
 else {
   println userinfo.getEmail() + " is not an authorized administrator."
