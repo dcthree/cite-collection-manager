@@ -36,7 +36,7 @@ callback.setRawPath("/cite-collection-manager/oauth2callback")
 
 String url = CodeFlow.instance.build().newAuthorizationUrl().setRedirectUri(callback.build()).build()
 Credential credential = CodeFlow.instance.build().loadCredential('administrator')
-String authorized = (credential == null) ? "unauthorized" : "authorized"
+String authorized = CodeFlow.instance.authorized() ? "unauthorized" : "authorized"
 
 home.html {
     head {
