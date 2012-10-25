@@ -1,0 +1,28 @@
+import com.google.api.client.http.HttpRequest
+import com.google.api.client.http.HttpResponse
+import com.google.api.client.http.HttpHeaders
+import com.google.api.client.auth.oauth2.Credential
+import com.google.api.services.fusiontables.Fusiontables
+import com.google.api.services.fusiontables.Fusiontables.Table
+import com.google.api.services.fusiontables.Fusiontables.Builder
+import com.google.api.services.fusiontables.model.TableList
+import com.google.api.services.fusiontables.model.Sqlresponse
+import com.google.api.client.http.GenericUrl
+import com.google.api.client.http.HttpTransport
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.JsonFactory
+import com.google.api.client.json.jackson2.JacksonFactory
+
+import groovy.xml.MarkupBuilder
+StringWriter writer = new StringWriter()
+MarkupBuilder home = new MarkupBuilder(writer)
+
+String sql = request.getParameter("sql")
+String user_access_token = request.getParameter("access_token")
+
+Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+
+Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
+Sqlresponse response = fusiontables.query().sql(sql).execute()
+
+println response.toPrettyString()
