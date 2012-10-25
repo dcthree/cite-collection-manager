@@ -39,6 +39,10 @@
         <servlet-name>GroovyServlet</servlet-name>
         <url-pattern>/query</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroovyServlet</servlet-name>
+        <url-pattern>/editor</url-pattern>
+    </servlet-mapping>
     <!--
     <servlet-mapping>
         <servlet-name>AuthorizationServlet</servlet-name>
