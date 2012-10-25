@@ -33,41 +33,20 @@ else {
   GenericUrl callback = new GenericUrl(request.getRequestURL().toString())
   callback.setRawPath("/cite-collection-manager/oauth2callback")
 
-  String url = CodeFlow.instance.build().newAuthorizationUrl().setRedirectUri(callback.build()).build()
-  Credential credential = CodeFlow.instance.build().loadCredential('administrator')
-  String authorized = CodeFlow.instance.authorized() ? "unauthorized" : "authorized"
+  String authorization_url = CodeFlow.instance.build().newAuthorizationUrl().setRedirectUri(callback.build()).build()
 
   html.html {
       head {
           title("CITE Collection Manager")
-          p('class' : "menu", "CITE Collections: home")
       }
       body {
           div(id : "header") 
           div {
-              h1("CITE Collections interface to data in Google Fusion Tables")
-              p("Supply your own home page here.")
-              p(authorized)
-              if( credential != null ) {
-                p(credential.getExpiresInSeconds())
-              }
-              
+              h1("CITE Collection Manager")
+             
+              p("This instance of the collection manager has not yet been authenticated by the administrator. If you are the administrator, please click the authentication link.") 
               p {
-                a (href : url, "Google Auth")
-              }
-
-              p {
-                  mkp.yield     "Quick README including "
-                  a(href : "README.md", "how to configure and run")
-                  mkp.yield " this service."
-              }
-              p {
-                  mkp.yield "License: "
-                  a(href : "gpl-3.0.txt","GPL 3")
-              }
-              p {
-                  mkp.yield "Page of forms to test the "
-                  a (href : "testPage", "CITE Collections API")
+                a (href : authorization_url, "Google Authentication")
               }
           }
       }
