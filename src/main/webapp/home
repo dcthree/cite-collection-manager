@@ -23,13 +23,12 @@ import java.util.Arrays
 import java.util.List
 import javax.jdo.JDOHelper
 
-CodeFlow.instance.setSecrets(getClass().getClassLoader())
-
 StringWriter writer = new StringWriter()
 MarkupBuilder home = new MarkupBuilder(writer)
 
-File secrets_file = new File(getClass().getClassLoader().getResource("client_secrets.json").toURI())
-String secrets = FileUtils.readFileToString(secrets_file, "UTF-8")
+if (CodeFlow.instance.secrets == null) {
+  CodeFlow.instance.setSecrets(getClass().getClassLoader())
+}
 
 GenericUrl callback = new GenericUrl(request.getRequestURL().toString())
 callback.setRawPath("/cite-collection-manager/oauth2callback")
@@ -57,12 +56,6 @@ home.html {
               a (href : url, "Google Auth")
             }
 
-            p("@apiKey@")
-  
-            pre {
-              code(secrets)
-            }
-            
             p {
                 mkp.yield     "Quick README including "
                 a(href : "README.md", "how to configure and run")

@@ -1,4 +1,3 @@
-import groovy.xml.MarkupBuilder
 import org.apache.commons.io.FileUtils
 
 import com.google.api.services.oauth2.Oauth2
@@ -32,9 +31,6 @@ import java.io.IOException
 import java.util.Arrays
 import java.util.List
 import javax.jdo.JDOHelper
-
-StringWriter writer = new StringWriter()
-MarkupBuilder home = new MarkupBuilder(writer)
 
 String code = request.getParameter("code")
 String uri = request.getRequestURL().toString()
