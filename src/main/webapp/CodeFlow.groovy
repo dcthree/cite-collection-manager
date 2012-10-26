@@ -35,7 +35,7 @@ class CodeFlow {
   }
   
   public build() {
-    return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").build()
+    return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").setApprovalPrompt("force").build()
   }
 
   public authorized() {
