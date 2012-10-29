@@ -1,3 +1,7 @@
+package edu.harvard.chs.citecollectionmanager
+
+import edu.harvard.chs.citecollectionmanager.CodeFlow
+
 import com.google.api.client.http.HttpRequest
 import com.google.api.client.http.HttpResponse
 import com.google.api.client.http.HttpHeaders

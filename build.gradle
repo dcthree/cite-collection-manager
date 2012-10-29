@@ -27,6 +27,7 @@ dependencies {
     compile group: 'com.google.http-client', name: 'google-http-client-jackson2', version: '1.11.0-beta'
     compile group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.11.0-beta'
     compile group: 'com.google.oauth-client', name: 'google-oauth-client-servlet', version: '1.11.0-beta'
+    groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.0.1' // http://jira.codehaus.org/browse/GROOVY-5747
 }
 
 httpPort = 8988

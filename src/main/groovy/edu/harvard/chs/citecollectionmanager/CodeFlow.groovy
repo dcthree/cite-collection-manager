@@ -1,3 +1,5 @@
+package edu.harvard.chs.citecollectionmanager
+
 import org.apache.commons.io.FileUtils
 
 import com.google.api.client.auth.oauth2.Credential
