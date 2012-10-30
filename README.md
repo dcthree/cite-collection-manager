@@ -15,5 +15,6 @@ Configuration
 * On the Google API Access page, click the "Download JSON" link for the Client ID
 * Copy the resulting `client_secrets.json` file to `src/main/resources/client_secrets.json`
 * Copy a built instance of the CITE Collection Editor (i.e. the `build/` directory) to `src/main/webapp/cite-collection-editor` (this should eventually be rolled into a Gradle dependency)
-* Copy `gradle.properties-dist` to `gradle.properties`, modifying the values to your email address, capabilities URL, and authorization table ID (currently unused)
+* Create an authorization table in Google Fusion Tables. This is a table with three string columns named `E-Mail`, `Name`, and `Blocked`
+* Copy `gradle.properties-dist` to `gradle.properties`, modifying the values to your email address, capabilities URL, and authorization table ID
 * Run `gradle jettyRunWar`
