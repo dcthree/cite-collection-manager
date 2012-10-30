@@ -34,6 +34,21 @@ httpPort = 8988
 stopPort = 9451
 stopKey = 'foo'
 
+// This filters resources which we can access from compiled groovy classes.
+// See: http://mrhaki.blogspot.com/2010/11/gradle-goodness-add-filtering-to.html
+// and http://forums.gradle.org/gradle/topics/sourcesetcontainer_all_removed_in_1_0m9
+afterEvaluate {
+  configure(allProcessResourcesTasks()) {
+    filter(ReplaceTokens, tokens: ['administratorEmail': administratorEmail, 'authorizationTable': authorizationTable, 'capabilitiesUrl': capabilitiesUrl])
+  }
+}
+ 
+def allProcessResourcesTasks() {
+  sourceSets*.processResourcesTaskName.collect {
+    tasks[it]
+  }
+}
+
 task srcCopy(type: Copy) {
     from(file('src/main/webapp'))
     into('build/webapp/cite-collection-manager')

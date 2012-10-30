@@ -1,6 +1,7 @@
 package edu.harvard.chs.citecollectionmanager
 
 import edu.harvard.chs.citecollectionmanager.CodeFlow
+import edu.harvard.chs.citecollectionmanager.UserAuthorization
 
 import com.google.api.client.http.HttpRequest
 import com.google.api.client.http.HttpResponse
@@ -38,14 +39,19 @@ if((user_access_token != null) && (!user_access_token.equals("null"))) {
   Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).build()
   Userinfo userinfo = oauth2.userinfo().get().execute()
 
-  System.out.println("For: " + userinfo.getEmail())
+  UserAuthorization user_authorization = new UserAuthorization(userinfo)
 
-  Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+  if(user_authorization.authorized()) {
+    Credential credential = CodeFlow.instance.build().loadCredential('administrator')
 
-  Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
-  Sqlresponse response = fusiontables.query().sql(sql).execute()
+    Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
+    Sqlresponse response = fusiontables.query().sql(sql).execute()
 
-  println response.toPrettyString()
+    println response.toPrettyString()
+  }
+  else {
+    System.out.println("User blocked, aborting proxy")
+  }
 }
 else {
   System.out.println("No access token, not proxying: " + sql)
