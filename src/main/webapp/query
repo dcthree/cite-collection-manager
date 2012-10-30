@@ -16,6 +16,12 @@ import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.services.oauth2.Oauth2
+import com.google.api.services.oauth2.Oauth2.Builder
+import com.google.api.services.oauth2.model.Tokeninfo
+import com.google.api.services.oauth2.model.Userinfo
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder
 
 import groovy.xml.MarkupBuilder
 StringWriter writer = new StringWriter()
@@ -24,11 +30,23 @@ MarkupBuilder home = new MarkupBuilder(writer)
 String sql = request.getParameter("sql")
 String user_access_token = request.getParameter("access_token")
 
-System.out.println("Proxying: " + sql)
+if((user_access_token != null) && (!user_access_token.equals("null"))) {
+  System.out.println("Proxying: " + sql)
+  System.out.println(user_access_token)
 
-Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+  GoogleCredential google_credential = new GoogleCredential().setAccessToken(user_access_token)
+  Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).build()
+  Userinfo userinfo = oauth2.userinfo().get().execute()
 
-Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
-Sqlresponse response = fusiontables.query().sql(sql).execute()
+  System.out.println("For: " + userinfo.getEmail())
 
-println response.toPrettyString()
+  Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+
+  Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
+  Sqlresponse response = fusiontables.query().sql(sql).execute()
+
+  println response.toPrettyString()
+}
+else {
+  System.out.println("No access token, not proxying: " + sql)
+}
