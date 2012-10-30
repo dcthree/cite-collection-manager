@@ -18,6 +18,7 @@ class UserAuthorization {
   private Fusiontables fusiontables;
   private Credential credential;
   private Userinfo user;
+  private Map table_user;
 
   private static String getTableId() {
     Properties prop = new Properties()
@@ -28,7 +29,6 @@ class UserAuthorization {
   }
 
   public boolean authorized() {
-    def table_user = this.getUserFromTable()
     System.out.println(table_user.toString())
     if((table_user == null) || (table_user["blocked"].equals("true"))) {
       return false
@@ -53,12 +53,13 @@ class UserAuthorization {
   }
 
   private createUserInTable() {
-    def table_user = this.getUserFromTable()
+    table_user = this.getUserFromTable()
     if(table_user == null) {
       String sql = "INSERT INTO " + table_id + " ('E-Mail', Name, Blocked) VALUES ('" + user.getEmail() + "', '" + user.getName() + "', '" + blocked_default + "')"
       System.out.println("Running SQL: " + sql)
       Sqlresponse response = fusiontables.query().sql(sql).execute()
       System.out.println(response.toPrettyString())
+      table_user = this.getUserFromTable()
     }
   }
 
@@ -66,8 +67,6 @@ class UserAuthorization {
     System.out.println("Creating UserAuthorization")
     this.user = user
     credential = CodeFlow.instance.build().loadCredential('administrator')
-    // System.out.println("UserAuthorization admin credential:")
-    // System.out.println(credential.toPrettyString())
     fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
     this.createUserInTable()
   }
