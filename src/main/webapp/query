@@ -24,6 +24,8 @@ import com.google.api.services.oauth2.model.Userinfo
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder
 
+import javax.servlet.http.HttpServletResponse
+
 import groovy.xml.MarkupBuilder
 StringWriter writer = new StringWriter()
 MarkupBuilder home = new MarkupBuilder(writer)
@@ -51,8 +53,10 @@ if((user_access_token != null) && (!user_access_token.equals("null"))) {
   }
   else {
     System.out.println("User blocked, aborting proxy")
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN)
   }
 }
 else {
   System.out.println("No access token, not proxying: " + sql)
+  response.setStatus(HttpServletResponse.SC_FORBIDDEN)
 }
