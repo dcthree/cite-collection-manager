@@ -12,21 +12,9 @@
     </servlet>
 
     <servlet>
-      <servlet-name>AuthorizationServlet</servlet-name>
-      <servlet-class>edu.harvard.chs.authorizationservlet.AuthorizationServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-      <servlet-name>AuthorizationServletCallback</servlet-name>
-      <servlet-class>edu.harvard.chs.authorizationservlet.AuthorizationServletCallback</servlet-class>
-    </servlet>
-
-    <servlet>
       <servlet-name>FusionTablesServlet</servlet-name>
       <servlet-class>edu.harvard.chs.citecollectionmanager.FusionTablesServlet</servlet-class>
     </servlet>
-
-
 
     <servlet-mapping>
         <servlet-name>GroovyServlet</servlet-name>
@@ -52,16 +40,6 @@
         <servlet-name>FusionTablesServlet</servlet-name>
         <url-pattern>/tables/*</url-pattern>
     </servlet-mapping>
-    <!--
-    <servlet-mapping>
-        <servlet-name>AuthorizationServlet</servlet-name>
-        <url-pattern>/authorize</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AuthorizationServletCallback</servlet-name>
-        <url-pattern>/oauth2callback</url-pattern>
-    </servlet-mapping>
-    -->
 
     <welcome-file-list>
         <welcome-file>home</welcome-file>
