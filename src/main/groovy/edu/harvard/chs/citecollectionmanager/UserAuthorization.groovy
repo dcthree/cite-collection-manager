@@ -15,6 +15,7 @@ import java.util.Properties
 class UserAuthorization {
   private static final String table_id = getTableId()
   private static final String blocked_default = "false"
+  private static final Object lock = new Object()
   private Fusiontables fusiontables;
   private Credential credential;
   private Userinfo user;
@@ -53,13 +54,15 @@ class UserAuthorization {
   }
 
   private createUserInTable() {
-    table_user = this.getUserFromTable()
-    if(table_user == null) {
-      String sql = "INSERT INTO " + table_id + " ('E-Mail', Name, Blocked) VALUES ('" + user.getEmail() + "', '" + user.getName() + "', '" + blocked_default + "')"
-      System.out.println("Running SQL: " + sql)
-      Sqlresponse response = fusiontables.query().sql(sql).execute()
-      System.out.println(response.toPrettyString())
+    synchronized(lock) {
       table_user = this.getUserFromTable()
+      if(table_user == null) {
+        String sql = "INSERT INTO " + table_id + " ('E-Mail', Name, Blocked) VALUES ('" + user.getEmail() + "', '" + user.getName() + "', '" + blocked_default + "')"
+        System.out.println("Running SQL: " + sql)
+        Sqlresponse response = fusiontables.query().sql(sql).execute()
+        System.out.println(response.toPrettyString())
+        table_user = this.getUserFromTable()
+      }
     }
   }
 
