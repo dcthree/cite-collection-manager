@@ -35,6 +35,13 @@ class CodeFlow {
   public setSecrets(context) {
     secrets = GoogleClientSecrets.load(JSON_FACTORY, context.getResourceAsStream("client_secrets.json"))
   }
+
+  public static getBaseURL(request) {
+    String url = request.getRequestURL().toString()
+    String context = request.getContextPath()
+    String base_url = url.substring(0,url.lastIndexOf(context)+context.length())
+    return base_url
+  }
   
   public build() {
     return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialStore(credentialStore).setAccessType("offline").setApprovalPrompt("force").build()

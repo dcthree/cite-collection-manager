@@ -27,17 +27,14 @@ import java.util.List
 import javax.jdo.JDOHelper
 
 if (CodeFlow.instance.authorized()) {
-  response.sendRedirect("/cite-collection-manager/editor")
+  response.sendRedirect(CodeFlow.getBaseURL(request) + "/editor")
 }
 else {
   if (CodeFlow.instance.secrets == null) {
     CodeFlow.instance.setSecrets(getClass().getClassLoader())
   }
 
-  GenericUrl callback = new GenericUrl(request.getRequestURL().toString())
-  callback.setRawPath("/cite-collection-manager/oauth2callback")
-
-  String authorization_url = CodeFlow.instance.build().newAuthorizationUrl().setRedirectUri(callback.build()).build()
+  String authorization_url = CodeFlow.instance.build().newAuthorizationUrl().setRedirectUri(CodeFlow.getBaseURL(request) + "/oauth2callback").build()
 
   html.html {
       head {

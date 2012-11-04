@@ -3,8 +3,6 @@ package edu.harvard.chs.citecollectionmanager
 import edu.harvard.chs.citecollectionmanager.CodeFlow
 
 if (CodeFlow.instance.authorized()) {
-String url = request.getRequestURL().toString()
-String collection_manager_url = url.substring(0,url.length()-(new String("/editor").length()))
 String google_client_id = CodeFlow.instance.secrets.getDetails().getClientId()
 print """<!DOCTYPE html>
 <html lang="en-US">
@@ -36,7 +34,7 @@ print """
       capabilities_url: '@capabilitiesUrl@'
     };
 """
-print "    window.FUSION_TABLES_URI = '" + collection_manager_url + "';"
+print "    window.FUSION_TABLES_URI = '" + CodeFlow.getBaseURL(request) + "';"
 print """
   </script>
   <div class="container">
@@ -47,5 +45,5 @@ print """
 """
 }
 else {
-  response.sendRedirect("/cite-collection-manager/")
+  response.sendRedirect(CodeFlow.getBaseURL(request))
 }
