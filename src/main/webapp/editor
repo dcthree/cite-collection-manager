@@ -34,7 +34,7 @@ print """
       capabilities_url: '@capabilitiesUrl@'
     };
 """
-print "    window.FUSION_TABLES_URI = '" + CodeFlow.getBaseURL(request) + "';"
+print "    window.FUSION_TABLES_URI = window.location.href.replace(/\\/editor(#.*)?\$/,'');"
 print """
   </script>
   <div class="container">
@@ -45,5 +45,5 @@ print """
 """
 }
 else {
-  response.sendRedirect(CodeFlow.getBaseURL(request))
+  response.sendRedirect('home')
 }

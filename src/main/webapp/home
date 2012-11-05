@@ -27,18 +27,34 @@ import java.util.List
 import javax.jdo.JDOHelper
 
 if (CodeFlow.instance.authorized()) {
-  response.sendRedirect(CodeFlow.getBaseURL(request) + "/editor")
+  response.sendRedirect("editor")
 }
 else {
   if (CodeFlow.instance.secrets == null) {
     CodeFlow.instance.setSecrets(getClass().getClassLoader())
   }
 
-  String authorization_url = CodeFlow.instance.build().newAuthorizationUrl().setRedirectUri(CodeFlow.getBaseURL(request) + "/oauth2callback").build()
+  def onload = """
+\$(document).ready(function() {
+  var oauth2callback = window.location.href.replace(/\\/home\$/,'/') + 'oauth2callback';
+  var google_oauth_link_parameters = {
+    access_type: 'offline',
+    approval_prompt: 'force',
+    client_id: '${CodeFlow.instance.secrets.getDetails().getClientId()}',
+    redirect_uri: oauth2callback,
+    response_type: 'code',
+    scope: '${CodeFlow.scopes.join(" ")}',
+    state: oauth2callback
+  };
+  \$('#google_auth').attr('href','https://accounts.google.com/o/oauth2/auth?' + (\$.param(google_oauth_link_parameters)));
+});
+"""
 
   html.html {
       head {
           title("CITE Collection Manager")
+          script(type: "text/javascript", src: "http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js")
+          script(type: "text/javascript", onload)
       }
       body {
           div(id : "header") 
@@ -47,7 +63,7 @@ else {
              
               p("This instance of the collection manager has not yet been authenticated by the administrator. If you are the administrator, please click the authentication link.") 
               p {
-                a (href : authorization_url, "Google Authentication")
+                a (id: 'google_auth', href : '#', "Google Authentication")
               }
           }
       }

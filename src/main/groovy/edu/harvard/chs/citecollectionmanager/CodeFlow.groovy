@@ -25,7 +25,7 @@ import java.util.List
 import javax.jdo.JDOHelper
 
 class CodeFlow {
-  private List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables")
+  public static List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables")
   private MemoryCredentialStore credentialStore = new MemoryCredentialStore()
   public GoogleClientSecrets secrets = null;
 
@@ -34,13 +34,6 @@ class CodeFlow {
 
   public setSecrets(context) {
     secrets = GoogleClientSecrets.load(JSON_FACTORY, context.getResourceAsStream("client_secrets.json"))
-  }
-
-  public static getBaseURL(request) {
-    String url = request.getRequestURL().toString()
-    String context = request.getContextPath()
-    String base_url = url.substring(0,url.lastIndexOf(context)+context.length())
-    return base_url
   }
   
   public build() {

@@ -36,9 +36,9 @@ import java.util.List
 import javax.jdo.JDOHelper
 
 String code = request.getParameter("code")
-String uri = request.getRequestURL().toString()
+String state = request.getParameter("state")
 
-TokenResponse token = CodeFlow.instance.build().newTokenRequest(code).setRedirectUri(uri).execute()
+TokenResponse token = CodeFlow.instance.build().newTokenRequest(code).setRedirectUri(state).execute()
 System.out.println(token.toPrettyString())
 
 GoogleCredential credential = new GoogleCredential.Builder().setTransport(CodeFlow.HTTP_TRANSPORT).setJsonFactory(CodeFlow.JSON_FACTORY).setClientSecrets(CodeFlow.instance.secrets).build()
@@ -54,7 +54,7 @@ if (userinfo.getEmail().equals("@administratorEmail@")) {
   String authorized = (CodeFlow.instance.build().loadCredential('administrator') == null) ? "unauthorized" : "authorized"
   System.out.println(authorized)
 
-  response.sendRedirect(CodeFlow.getBaseURL(request) + "/editor")
+  response.sendRedirect("editor")
 }
 else {
   println userinfo.getEmail() + " is not an authorized administrator."
