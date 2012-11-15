@@ -1,3 +1,5 @@
 gradle.properties
 build
 client_secrets.json
+.gradle
+src/main/webapp/cite-collection-editor
