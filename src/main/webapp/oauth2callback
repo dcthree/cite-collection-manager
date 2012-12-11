@@ -54,7 +54,12 @@ if (userinfo.getEmail().equals("@administratorEmail@")) {
   String authorized = (CodeFlow.instance.build().loadCredential('administrator') == null) ? "unauthorized" : "authorized"
   System.out.println(authorized)
 
-  response.sendRedirect("editor")
+  if ((UserAuthorization.table_id != null) && (!UserAuthorization.table_id.equals(''))) {
+    response.sendRedirect("editor")
+  }
+  else {
+    response.sendRedirect("createauth")
+  }
 }
 else {
   println userinfo.getEmail() + " is not an authorized administrator."

@@ -30,6 +30,10 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GroovyServlet</servlet-name>
+        <url-pattern>/createauth</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroovyServlet</servlet-name>
         <url-pattern>/query</url-pattern>
     </servlet-mapping>
     <servlet-mapping>

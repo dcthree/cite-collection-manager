@@ -13,7 +13,7 @@ import edu.harvard.chs.citecollectionmanager.CodeFlow
 import java.util.Properties
 
 class UserAuthorization {
-  private static final String table_id = getTableId()
+  public static String table_id = getTableId()
   private static final String blocked_default = "false"
   private static final Object lock = new Object()
   private Fusiontables fusiontables;
