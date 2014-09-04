@@ -32,7 +32,7 @@ public class FusionTablesServlet extends HttpServlet {
   {
     String user_access_token = request.getParameter("access_token")
     GoogleCredential google_credential = new GoogleCredential().setAccessToken(user_access_token)
-    Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).build()
+    Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).setApplicationName("cite-collection-manager").build()
     Userinfoplus userinfo = oauth2.userinfo().get().execute()
     
     UserAuthorization user_authorization = new UserAuthorization(userinfo)
@@ -40,7 +40,7 @@ public class FusionTablesServlet extends HttpServlet {
     if(user_authorization.authorized()) {
       Credential credential = CodeFlow.instance.build().loadCredential('administrator')
       String table_id = request.getRequestURL().toString().split("/").last()
-      Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
+      Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
 
       Table table = fusiontables.table().get(table_id).execute()
 

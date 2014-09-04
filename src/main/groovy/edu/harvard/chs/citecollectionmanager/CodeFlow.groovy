@@ -28,6 +28,7 @@ import javax.jdo.JDOHelper
 class CodeFlow {
   public static List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables")
   public GoogleClientSecrets secrets = null;
+  private DataStore<StoredCredential> credentialStore = new MemoryDataStoreFactory().getDataStore("CodeFlow")
 
   public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport()
   public static final JsonFactory JSON_FACTORY = new JacksonFactory()
@@ -37,7 +38,6 @@ class CodeFlow {
   }
   
   public build() {
-    DataStore<StoredCredential> credentialStore = new MemoryDataStoreFactory().getDataStore("CodeFlow")
     return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialDataStore(credentialStore).setAccessType("offline").setApprovalPrompt("force").build()
   }
 

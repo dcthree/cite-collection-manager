@@ -41,7 +41,7 @@ System.out.println(token.toPrettyString())
 
 GoogleCredential credential = new GoogleCredential.Builder().setTransport(CodeFlow.HTTP_TRANSPORT).setJsonFactory(CodeFlow.JSON_FACTORY).setClientSecrets(CodeFlow.instance.secrets).build()
 credential.setFromTokenResponse(token)
-Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
+Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
 
 Userinfoplus userinfo = oauth2.userinfo().get().execute()
 System.out.println(userinfo.getEmail())

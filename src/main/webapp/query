@@ -38,7 +38,7 @@ if((user_access_token != null) && (!user_access_token.equals("null"))) {
   System.out.println(user_access_token)
 
   GoogleCredential google_credential = new GoogleCredential().setAccessToken(user_access_token)
-  Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).build()
+  Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).setApplicationName("cite-collection-manager").build()
   Userinfoplus userinfo = oauth2.userinfo().get().execute()
 
   UserAuthorization user_authorization = new UserAuthorization(userinfo)
@@ -46,7 +46,7 @@ if((user_access_token != null) && (!user_access_token.equals("null"))) {
   if(user_authorization.authorized()) {
     Credential credential = CodeFlow.instance.build().loadCredential('administrator')
 
-    Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).build()
+    Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
     Sqlresponse response = fusiontables.query().sql(sql).execute()
 
     println response.toPrettyString()
