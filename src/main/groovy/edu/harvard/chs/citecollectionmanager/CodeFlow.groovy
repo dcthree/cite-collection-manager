@@ -3,6 +3,7 @@ package edu.harvard.chs.citecollectionmanager
 import org.apache.commons.io.FileUtils
 
 import com.google.api.client.auth.oauth2.Credential
+import com.google.api.client.auth.oauth2.StoredCredential
 import com.google.api.client.util.store.MemoryDataStoreFactory
 import com.google.api.client.util.store.DataStore
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp
@@ -26,17 +27,17 @@ import javax.jdo.JDOHelper
 
 class CodeFlow {
   public static List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables")
-  private DataStore credentialStore = new MemoryDataStoreFactory().getDataStore()
   public GoogleClientSecrets secrets = null;
 
   public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport()
   public static final JsonFactory JSON_FACTORY = new JacksonFactory()
 
   public setSecrets(context) {
-    secrets = GoogleClientSecrets.load(JSON_FACTORY, context.getResourceAsStream("client_secrets.json"))
+    secrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(context.getResourceAsStream("client_secrets.json")))
   }
   
   public build() {
+    DataStore<StoredCredential> credentialStore = new MemoryDataStoreFactory().getDataStore("CodeFlow")
     return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialDataStore(credentialStore).setAccessType("offline").setApprovalPrompt("force").build()
   }
 
