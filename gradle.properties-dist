@@ -1,3 +1,4 @@
 administratorEmail=example@example.com
 authorizationTable=authtableEncryptedId
 capabilitiesUrl=cite-collection-editor/capabilities/testedit-capabilities.xml
+validTables=table1,table2

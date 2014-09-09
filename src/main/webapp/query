@@ -24,7 +24,21 @@ import com.google.api.services.oauth2.model.Userinfoplus
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder
 
+import java.util.regex.Pattern
+
 import javax.servlet.http.HttpServletResponse
+
+def valid_sql(sql) {
+  if("@validTables@".isEmpty()) {
+    return true
+  }
+  else {
+    valid_tables = "@validTables@".tokenize(',')
+    tables_regex = valid_tables.each{ Pattern.quote(it) }.join('|')
+    System.out.println(tables_regex)
+    return ((sql =~ /^INSERT INTO (${tables_regex}) /) || (sql =~ /^SELECT .+? FROM (${tables_regex})/))
+  }
+}
 
 import groovy.xml.MarkupBuilder
 StringWriter writer = new StringWriter()
@@ -35,6 +49,7 @@ String user_access_token = request.getParameter("access_token")
 
 if((user_access_token != null) && (!user_access_token.equals("null"))) {
   System.out.println("Proxying: " + sql)
+  System.out.println(valid_sql(sql))
   System.out.println(user_access_token)
 
   GoogleCredential google_credential = new GoogleCredential().setAccessToken(user_access_token)
@@ -44,12 +59,18 @@ if((user_access_token != null) && (!user_access_token.equals("null"))) {
   UserAuthorization user_authorization = new UserAuthorization(userinfo)
 
   if(user_authorization.authorized()) {
-    Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+    if(valid_sql(sql)) {
+      Credential credential = CodeFlow.instance.build().loadCredential('administrator')
 
-    Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
-    Sqlresponse response = fusiontables.query().sql(sql).execute()
+      Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
+      Sqlresponse response = fusiontables.query().sql(sql).execute()
 
-    println response.toPrettyString()
+      println response.toPrettyString()
+    }
+    else {
+      System.out.println("Invalid SQL, aborting proxy")
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+    }
   }
   else {
     System.out.println("User blocked, aborting proxy")
