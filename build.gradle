@@ -15,7 +15,7 @@ repositories {
 dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '1.4'
     compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.3.3'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.3.6'
     compile group: 'com.google.apis', name: 'google-api-services-oauth2', version: 'v1-rev79-1.19.0'
     compile group: 'com.google.apis', name: 'google-api-services-fusiontables', version: 'v1-rev53-1.19.0'
     compile group: 'com.google.http-client', name: 'google-http-client-jackson2', version: '1.19.0'
