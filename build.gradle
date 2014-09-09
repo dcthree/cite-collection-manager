@@ -21,6 +21,8 @@ dependencies {
     compile group: 'com.google.http-client', name: 'google-http-client-jackson2', version: '1.19.0'
     compile group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.19.0'
     compile group: 'com.google.oauth-client', name: 'google-oauth-client-servlet', version: '1.19.0'
+    compile group: 'com.google.api-client', name: 'google-api-client-appengine', version: '1.19.0'
+    compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.10'
 }
 
 httpPort = 8988
