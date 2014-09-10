@@ -23,6 +23,7 @@ import com.google.api.services.oauth2.model.Tokeninfo
 import com.google.api.services.oauth2.model.Userinfoplus
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder
+import com.google.api.client.googleapis.json.GoogleJsonResponseException
 
 import java.util.regex.Pattern
 
@@ -52,29 +53,38 @@ if((user_access_token != null) && (!user_access_token.equals("null"))) {
   System.out.println(valid_sql(sql))
   System.out.println(user_access_token)
 
-  GoogleCredential google_credential = new GoogleCredential().setAccessToken(user_access_token)
-  Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).setApplicationName("cite-collection-manager").build()
-  Userinfoplus userinfo = oauth2.userinfo().get().execute()
+  try {
+    GoogleCredential google_credential = new GoogleCredential().setAccessToken(user_access_token)
+    Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).setApplicationName("cite-collection-manager").build()
+    Userinfoplus userinfo = oauth2.userinfo().get().execute()
 
-  UserAuthorization user_authorization = new UserAuthorization(userinfo)
+    System.out.println(userinfo.toPrettyString())
+  
+    UserAuthorization user_authorization = new UserAuthorization(userinfo)
 
-  if(user_authorization.authorized()) {
-    if(valid_sql(sql)) {
-      Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+    if(user_authorization.authorized()) {
+      if(valid_sql(sql)) {
+        Credential credential = CodeFlow.instance.build().loadCredential('administrator')
 
-      Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
-      Sqlresponse response = fusiontables.query().sql(sql).execute()
+        Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
+        Sqlresponse response = fusiontables.query().sql(sql).execute()
 
-      println response.toPrettyString()
+        println response.toPrettyString()
+      }
+      else {
+        System.out.println("Invalid SQL, aborting proxy")
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+      }
     }
     else {
-      System.out.println("Invalid SQL, aborting proxy")
+      System.out.println("User blocked, aborting proxy")
       response.setStatus(HttpServletResponse.SC_FORBIDDEN)
     }
   }
-  else {
-    System.out.println("User blocked, aborting proxy")
-    response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+  catch(GoogleJsonResponseException e) {
+    System.out.println("GoogleJsonResponseException (probably an invalid access token)")
+    println(e.getMessage())
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
   }
 }
 else {
