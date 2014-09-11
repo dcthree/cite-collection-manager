@@ -28,6 +28,7 @@ print """<!DOCTYPE html>
 <body>
   <script type="text/javascript">
     window.cite_collection_editor_config = {
+      google_scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 """
 print "      google_client_id: '" + google_client_id + "',"
 print """
