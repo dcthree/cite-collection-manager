@@ -1,8 +1,12 @@
 import org.apache.tools.ant.filters.*
 
+apply plugin: 'groovy'
+
+// Workaround for java.lang.OutOfMemoryError: Java heap space during compileGroovy phase
+compileGroovy.groovyOptions.fork(memoryMaximumSize: '1024m')
+
 apply plugin: 'war'
 apply plugin: 'jetty'
-apply plugin: 'groovy'
 apply plugin: 'maven'
 
 group = "edu.harvard.chs"
