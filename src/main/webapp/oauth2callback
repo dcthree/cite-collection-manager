@@ -32,25 +32,28 @@ import java.io.IOException
 import java.util.Arrays
 import java.util.List
 import javax.jdo.JDOHelper
+import java.util.logging.Logger
+
+Logger log = Logger.getLogger( getClass().getName() )
 
 String code = request.getParameter("code")
 String state = request.getParameter("state")
 
 TokenResponse token = CodeFlow.instance.build().newTokenRequest(code).setRedirectUri(state).execute()
-System.out.println(token.toPrettyString())
+log.fine(token.toPrettyString())
 
 GoogleCredential credential = new GoogleCredential.Builder().setTransport(CodeFlow.HTTP_TRANSPORT).setJsonFactory(CodeFlow.JSON_FACTORY).setClientSecrets(CodeFlow.instance.secrets).build()
 credential.setFromTokenResponse(token)
 Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
 
 Userinfoplus userinfo = oauth2.userinfo().get().execute()
-System.out.println(userinfo.getEmail())
+log.fine(userinfo.getEmail())
 
 if (userinfo.getEmail().equals("@administratorEmail@")) {
   CodeFlow.instance.build().createAndStoreCredential(token,"administrator")
 
   String authorized = (CodeFlow.instance.build().loadCredential('administrator') == null) ? "unauthorized" : "authorized"
-  System.out.println(authorized)
+  log.fine(authorized)
 
   if ((UserAuthorization.table_id != null) && (!UserAuthorization.table_id.equals(''))) {
     response.sendRedirect("editor")

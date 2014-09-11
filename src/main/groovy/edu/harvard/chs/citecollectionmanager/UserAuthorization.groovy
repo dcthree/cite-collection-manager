@@ -11,8 +11,10 @@ import com.google.api.services.oauth2.model.Userinfoplus
 import edu.harvard.chs.citecollectionmanager.CodeFlow
 
 import java.util.Properties
+import java.util.logging.Logger
 
 class UserAuthorization {
+  private static final Logger log = Logger.getLogger( UserAuthorization.class.getName() )
   public static String table_id = getTableId()
   private static final String blocked_default = "false"
   private static final Object lock = new Object()
@@ -30,7 +32,7 @@ class UserAuthorization {
   }
 
   public boolean authorized() {
-    System.out.println(table_user.toString())
+    log.finer(table_user.toString())
     if((table_user == null) || (table_user["blocked"].equals("true"))) {
       return false
     }
@@ -41,7 +43,7 @@ class UserAuthorization {
 
   private getUserFromTable() {
     String sql = "SELECT 'E-Mail', Name, Blocked FROM " + table_id + " WHERE 'E-Mail' = '" + user.getEmail() + "' LIMIT 1"
-    System.out.println("Running SQL: " + sql)
+    log.fine("Running SQL: " + sql)
     Sqlresponse response = fusiontables.query().sql(sql).execute()
     if((response != null) && (response.getRows() != null) && (!(response.getRows().isEmpty()))) {
       def row = response.getRows().first()
@@ -58,16 +60,16 @@ class UserAuthorization {
       table_user = this.getUserFromTable()
       if(table_user == null) {
         String sql = "INSERT INTO " + table_id + " ('E-Mail', Name, Blocked) VALUES ('" + user.getEmail() + "', '" + user.getName() + "', '" + blocked_default + "')"
-        System.out.println("Running SQL: " + sql)
+        log.fine("Running SQL: " + sql)
         Sqlresponse response = fusiontables.query().sql(sql).execute()
-        System.out.println(response.toPrettyString())
+        log.fine(response.toPrettyString())
         table_user = this.getUserFromTable()
       }
     }
   }
 
   public UserAuthorization(Userinfoplus user) {
-    System.out.println("Creating UserAuthorization")
+    log.finer("Creating UserAuthorization")
     this.user = user
     credential = CodeFlow.instance.build().loadCredential('administrator')
     fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()

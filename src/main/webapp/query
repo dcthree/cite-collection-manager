@@ -26,8 +26,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 
 import java.util.regex.Pattern
+import java.util.logging.Logger
 
 import javax.servlet.http.HttpServletResponse
+
+Logger log = Logger.getLogger( getClass().getName() )
 
 def valid_sql(sql) {
   if("@validTables@".isEmpty()) {
@@ -36,7 +39,6 @@ def valid_sql(sql) {
   else {
     valid_tables = "@validTables@".tokenize(',')
     tables_regex = valid_tables.each{ Pattern.quote(it) }.join('|')
-    System.out.println(tables_regex)
     return ((sql =~ /^INSERT INTO (${tables_regex}) /) || (sql =~ /^SELECT .+? FROM (${tables_regex})/))
   }
 }
@@ -49,21 +51,19 @@ String sql = request.getParameter("sql")
 String user_access_token = request.getParameter("access_token")
 
 if((user_access_token != null) && (!user_access_token.equals("null"))) {
-  System.out.println("Proxying: " + sql)
-  System.out.println(valid_sql(sql))
-  System.out.println(user_access_token)
+  log.finer(user_access_token)
 
   try {
     GoogleCredential google_credential = new GoogleCredential().setAccessToken(user_access_token)
     Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).setApplicationName("cite-collection-manager").build()
     Userinfoplus userinfo = oauth2.userinfo().get().execute()
-
-    System.out.println(userinfo.toPrettyString())
   
     UserAuthorization user_authorization = new UserAuthorization(userinfo)
 
     if(user_authorization.authorized()) {
       if(valid_sql(sql)) {
+        log.info("Proxying on behalf of " + userinfo.getEmail() + ": " + sql)
+
         Credential credential = CodeFlow.instance.build().loadCredential('administrator')
 
         Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
@@ -72,22 +72,22 @@ if((user_access_token != null) && (!user_access_token.equals("null"))) {
         println response.toPrettyString()
       }
       else {
-        System.out.println("Invalid SQL, aborting proxy")
+        log.warning("Invalid SQL from user " + userinfo.getEmail() + ", aborting proxy of query: " + sql)
         response.setStatus(HttpServletResponse.SC_FORBIDDEN)
       }
     }
     else {
-      System.out.println("User blocked, aborting proxy")
+      log.warning("User " + userinfo.getEmail() + " blocked, aborting proxy of query: " + sql)
       response.setStatus(HttpServletResponse.SC_FORBIDDEN)
     }
   }
   catch(GoogleJsonResponseException e) {
-    System.out.println("GoogleJsonResponseException (probably an invalid access token)")
+    log.warning("GoogleJsonResponseException (probably an invalid access token)")
     println(e.getMessage())
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
   }
 }
 else {
-  System.out.println("No access token, not proxying: " + sql)
+  log.warning("No access token, not proxying: " + sql)
   response.setStatus(HttpServletResponse.SC_FORBIDDEN)
 }

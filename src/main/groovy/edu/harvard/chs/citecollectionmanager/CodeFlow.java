@@ -26,9 +26,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.jdo.JDOHelper;
 
 class CodeFlow {
+  private static final Logger log = Logger.getLogger( CodeFlow.class.getName() );
   public static List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/fusiontables");
   public GoogleClientSecrets secrets = null;
 
@@ -43,17 +45,17 @@ class CodeFlow {
     try {
       String appEngineEnvironment = System.getProperty("com.google.appengine.runtime.environment");
       if (appEngineEnvironment == null) {
-        System.out.println("Not running on appEngine, using MemoryDataStore");
+        log.finer("Not running on appEngine, using MemoryDataStore");
         DataStore<StoredCredential> credentialStore = MemoryDataStoreFactory.getDefaultInstance().getDataStore("CodeFlow");
         return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialDataStore(credentialStore).setAccessType("offline").setApprovalPrompt("force").build();
       }
       else {
-        System.out.println("Running on appEngine, using AppEngineDataStore");
+        log.finer("Running on appEngine, using AppEngineDataStore");
         return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setDataStoreFactory(AppEngineDataStoreFactory.getDefaultInstance()).setAccessType("offline").setApprovalPrompt("force").build();
       }
     }
     catch(IOException e) {
-      System.out.println(e.getMessage());
+      log.severe(e.getMessage());
       return null;
     }
   }
