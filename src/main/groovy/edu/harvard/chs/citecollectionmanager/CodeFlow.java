@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.util.store.MemoryDataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.api.client.util.store.DataStore;
@@ -23,9 +24,11 @@ import com.google.api.services.oauth2.model.Userinfoplus;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 import javax.jdo.JDOHelper;
 
@@ -40,14 +43,29 @@ class CodeFlow {
   public void setSecrets(ClassLoader context) throws IOException {
     secrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(context.getResourceAsStream("client_secrets.json")));
   }
+
+  private static String getFileCredentialStorePath() throws IOException {
+    Properties prop = new Properties();
+    InputStream input_stream = CodeFlow.class.getResourceAsStream("build.properties");
+    prop.load(input_stream);
+    input_stream.close();
+    return prop.getProperty("fileCredentialStore");
+  }
   
   public GoogleAuthorizationCodeFlow build() {
     try {
       String appEngineEnvironment = System.getProperty("com.google.appengine.runtime.environment");
       if (appEngineEnvironment == null) {
-        log.finer("Not running on appEngine, using MemoryDataStore");
-        DataStore<StoredCredential> credentialStore = MemoryDataStoreFactory.getDefaultInstance().getDataStore("CodeFlow");
-        return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialDataStore(credentialStore).setAccessType("offline").setApprovalPrompt("force").build();
+        if (getFileCredentialStorePath().isEmpty()) {
+          log.finer("Not running on appEngine, using MemoryDataStore");
+          DataStore<StoredCredential> credentialStore = MemoryDataStoreFactory.getDefaultInstance().getDataStore("CodeFlow");
+          return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialDataStore(credentialStore).setAccessType("offline").setApprovalPrompt("force").build();
+        }
+        else {
+          log.finer("Not running on appEngine and fileCredentialStore is set, using FileCredentialStore");
+          DataStore<StoredCredential> credentialStore = StoredCredential.getDefaultDataStore(new FileDataStoreFactory(new File(getFileCredentialStorePath())));
+          return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, scopes).setCredentialDataStore(credentialStore).setAccessType("offline").setApprovalPrompt("force").build();
+        }
       }
       else {
         log.finer("Running on appEngine, using AppEngineDataStore");
