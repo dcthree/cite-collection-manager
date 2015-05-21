@@ -1,0 +1,4 @@
+.gradle/
+build/
+gradle.properties
+src/main/webapp/cite-collection-editor/
