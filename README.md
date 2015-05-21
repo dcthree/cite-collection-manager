@@ -15,7 +15,7 @@ Configuration
 * On the Google API Access page, click the "Download JSON" link for the Client ID
 * Copy the resulting `client_secrets.json` file to `src/main/resources/client_secrets.json`
 * Copy a built instance of the [CITE Collection Editor](https://github.com/ryanfb/cite-collection-editor) (i.e. the `build/` directory) to `src/main/webapp/cite-collection-editor` (this should eventually be rolled into a Gradle dependency)
-* Create an authorization table in Google Fusion Tables. This is a table with three string columns named `E-Mail`, `Name`, and `Blocked`
+* Create an authorization table in Google Fusion Tables. This is a table with three text columns named `E-Mail`, `Name`, and `Blocked`
 * Copy `gradle.properties-dist` to `gradle.properties`, modifying the values to your email address, capabilities URL, and authorization table ID. Set the validTables parameter if you want to restrict proxied access to a set of tables. The "Administrator" email address must have "edit" permissions on the authorization Fusion Table and all Fusion Tables you wish to proxy.
 * Run `gradle jettyRunWar`
 
@@ -24,6 +24,7 @@ Deploying on Google App Engine
 
 Unlike the CITE Collection Editor, the CITE Collection Manager requires some server-side resources and processing. This can typically be managed within the free quotas of [Google's App Engine platform](https://cloud.google.com/appengine/docs) if you don't want to manage a server yourself. The CITE Collection Manager also has code specifically for persisting credentials within the the App Engine environment.
 
+* First, follow the general configuration steps above
 * Create an application at <http://appengine.google.com/>
 * Copy `appengine-web.example.xml` to `src/main/webapp/WEB-INF/appengine-web.xml`, editing the `<application>` tag with the name of your App Engine application
 * Add the following to "Redirect URIs" for your Google API Credentials:
