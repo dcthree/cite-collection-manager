@@ -18,3 +18,27 @@ Configuration
 * Create an authorization table in Google Fusion Tables. This is a table with three string columns named `E-Mail`, `Name`, and `Blocked`
 * Copy `gradle.properties-dist` to `gradle.properties`, modifying the values to your email address, capabilities URL, and authorization table ID. Set the validTables parameter if you want to restrict proxied access to a set of tables.
 * Run `gradle jettyRunWar`
+
+Deploying on Google App Engine
+------------------------------
+
+Unlike the CITE Collection Editor, the CITE Collection Manager requires some server-side resources and processing. This can typically be managed within the free quotas of [Google's App Engine platform](https://cloud.google.com/appengine/docs) if you don't want to manage a server yourself. The CITE Collection Manager also has code specifically for persisting credentials within the the App Engine environment.
+
+* Create an application at <http://appengine.google.com/>
+* Edit `src/main/webapp/WEB-INF/appengine-web.xml` with the name of your App Engine application
+* Add the following to "Redirect URIs" for your Google API Credentials:
+
+        http://myapp.appspot.com/oauth2callback
+        http://myapp.appspot.com/editor
+        https://myapp.appspot.com/oauth2callback
+        https://myapp.appspot.com/editor
+
+* Add the following to "JavaScript Origins" for your Google API Credentials:
+
+        http://myapp.appspot.com/
+        https://myapp.appspot.com/
+
+* Download/unzip/install the [Google App Engine SDK for Java](https://cloud.google.com/appengine/downloads)
+* Run `gradle jettyRunWar` to build/run/test your CITE Collection Manager instance locally
+* Run `appcfg.sh update build/tmp/jettyRunWar/webapp` to upload to Google App Engine (see [Google's *Uploading and Managing a Java App* documentation](https://cloud.google.com/appengine/docs/java/tools/uploadinganapp) for details)
+* Check <http://myapp.appspot.com/> and the App Engine console for your app
