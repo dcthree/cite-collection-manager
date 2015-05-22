@@ -20,7 +20,7 @@ print """<!DOCTYPE html>
 <script type="text/javascript" src="cite-collection-editor/vendor/pagedown-bootstrap/Markdown.Converter.js"></script>
 <script type="text/javascript" src="cite-collection-editor/vendor/pagedown-bootstrap/Markdown.Sanitizer.js"></script>
 <script type="text/javascript" src="cite-collection-editor/vendor/pagedown-bootstrap/Markdown.Editor.js"></script>
-<script type="text/javascript" src="cite-collection-editor/vendor/autosize/jquery.autosize-min.js"></script>
+<script type="text/javascript" src="cite-collection-editor/vendor/autosize/autosize.min.js"></script>
 <link href="cite-collection-editor/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"></link>
 <link href="cite-collection-editor/vendor/pagedown-bootstrap/Markdown.Editor.css" rel="stylesheet"></link>
 <link href="cite-collection-editor/vendor/chosen/chosen.css" rel="stylesheet"></link>
