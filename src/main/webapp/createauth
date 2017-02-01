@@ -44,7 +44,7 @@ if (CodeFlow.instance.authorized()) {
     html.html {
       head {
         title("CITE Collection Manager")
-        script(type: "text/javascript", src: "http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js")
+        script(type: "text/javascript", src: "//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js")
         script(type: "text/javascript", onload)
       }
       body {
