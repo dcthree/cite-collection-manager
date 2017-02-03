@@ -23,13 +23,13 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '1.4'
     compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
     compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.7'
-    compile group: 'com.google.apis', name: 'google-api-services-oauth2', version: 'v1-rev79-1.19.0'
-    compile group: 'com.google.apis', name: 'google-api-services-fusiontables', version: 'v1-rev53-1.19.0'
-    compile group: 'com.google.http-client', name: 'google-http-client-jackson2', version: '1.19.0'
-    compile group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.19.0'
-    compile group: 'com.google.oauth-client', name: 'google-oauth-client-servlet', version: '1.19.0'
-    compile group: 'com.google.api-client', name: 'google-api-client-appengine', version: '1.19.0'
-    compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.10'
+    compile group: 'com.google.apis', name: 'google-api-services-oauth2', version: 'v1-rev129-1.22.0'
+    compile group: 'com.google.apis', name: 'google-api-services-fusiontables', version: 'v2-rev15-1.22.0'
+    compile group: 'com.google.http-client', name: 'google-http-client-jackson2', version: '1.22.0'
+    compile group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.22.0'
+    compile group: 'com.google.oauth-client', name: 'google-oauth-client-servlet', version: '1.22.0'
+    compile group: 'com.google.api-client', name: 'google-api-client-appengine', version: '1.22.0'
+    compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.48'
 }
 
 httpPort = 8988
