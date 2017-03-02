@@ -48,7 +48,7 @@ StringWriter writer = new StringWriter()
 MarkupBuilder home = new MarkupBuilder(writer)
 
 String sql = request.getParameter("sql")
-String user_access_token = request.getParameter("access_token")
+String user_access_token = CodeFlow.getAccessToken(request)
 
 if((user_access_token != null) && (!user_access_token.equals("null"))) {
   log.finer(user_access_token)

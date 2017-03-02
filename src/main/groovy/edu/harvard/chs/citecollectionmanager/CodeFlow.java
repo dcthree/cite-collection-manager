@@ -1,6 +1,7 @@
 package edu.harvard.chs.citecollectionmanager;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
@@ -31,6 +32,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 import javax.jdo.JDOHelper;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 class CodeFlow {
   private static final Logger log = Logger.getLogger( CodeFlow.class.getName() );
@@ -85,6 +88,18 @@ class CodeFlow {
     else {
       return (this.build().loadCredential("administrator") != null);
     }
+  }
+
+  public static String getAccessToken(HttpServletRequest request) {
+    String access_token = request.getHeader("Authorization");
+    if(!StringUtils.isBlank(access_token)) {
+      access_token = access_token.replaceAll("^Bearer ","");
+    }
+    else {
+      // fall back to request parameter if Authorization header isn't present
+      access_token = request.getParameter("access_token");
+    }
+    return access_token;
   }
 
   private static final CodeFlow INSTANCE = new CodeFlow();

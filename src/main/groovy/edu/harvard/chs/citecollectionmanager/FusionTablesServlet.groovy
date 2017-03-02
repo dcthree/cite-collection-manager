@@ -30,7 +30,7 @@ public class FusionTablesServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
   {
-    String user_access_token = request.getParameter("access_token")
+    String user_access_token = CodeFlow.getAccessToken(request)
     GoogleCredential google_credential = new GoogleCredential().setAccessToken(user_access_token)
     Oauth2 oauth2 = new Oauth2.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, google_credential).setApplicationName("cite-collection-manager").build()
     Userinfoplus userinfo = oauth2.userinfo().get().execute()
