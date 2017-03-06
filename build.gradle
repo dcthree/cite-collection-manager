@@ -6,7 +6,7 @@ apply plugin: 'groovy'
 compileGroovy.groovyOptions.fork(memoryMaximumSize: '1024m')
 
 apply plugin: 'war'
-apply plugin: 'jetty'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 apply plugin: 'maven'
 
 group = "edu.harvard.chs"
@@ -33,19 +33,26 @@ dependencies {
     compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.48'
 }
 
-httpPort = 8988
-stopPort = 9451
-stopKey = 'foo'
+gretty {
+  httpPort = 8988
 
-// This filters resources which we can access from compiled groovy classes.
-// See: http://mrhaki.blogspot.com/2010/11/gradle-goodness-add-filtering-to.html
-// and http://forums.gradle.org/gradle/topics/sourcesetcontainer_all_removed_in_1_0m9
-afterEvaluate {
-  configure(allProcessResourcesTasks()) {
-    filter(ReplaceTokens, tokens: ['administratorEmail': administratorEmail, 'authorizationTable': authorizationTable, 'capabilitiesUrl': capabilitiesUrl, 'fileCredentialStore': fileCredentialStore])
+  // This filters resources which we can access from compiled groovy classes.
+  // See: http://mrhaki.blogspot.com/2010/11/gradle-goodness-add-filtering-to.html
+  // and http://forums.gradle.org/gradle/topics/sourcesetcontainer_all_removed_in_1_0m9
+  processResources {
+    filesMatching '**/*.properties', { FileCopyDetails fileDetails ->
+      logger.warn 'File filtered: {}', fileDetails.path
+      filter(ReplaceTokens, tokens: ['administratorEmail': administratorEmail, 'authorizationTable': authorizationTable, 'capabilitiesUrl': capabilitiesUrl, 'fileCredentialStore': fileCredentialStore, 'validTables': validTables])
+    }
+  }
+  webappCopy {
+    filesMatching '*', { FileCopyDetails fileDetails ->
+      logger.warn 'File filtered: {}', fileDetails.path
+      filter(ReplaceTokens, tokens: ['administratorEmail': administratorEmail, 'authorizationTable': authorizationTable, 'capabilitiesUrl': capabilitiesUrl, 'fileCredentialStore': fileCredentialStore, 'validTables': validTables])
+    }
   }
 }
- 
+
 def allProcessResourcesTasks() {
   sourceSets*.processResourcesTaskName.collect {
     tasks[it]
