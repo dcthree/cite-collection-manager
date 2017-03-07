@@ -77,3 +77,10 @@ war {
     from "src/main/webapp"
     filter(ReplaceTokens, tokens: ['administratorEmail': administratorEmail, 'authorizationTable': authorizationTable, 'capabilitiesUrl': capabilitiesUrl, 'validTables': validTables])
 }
+
+task explodedWar(type: Copy) {
+    into "$buildDir/exploded"
+    with war
+}
+
+war.dependsOn explodedWar
