@@ -5,21 +5,36 @@ apply plugin: 'groovy'
 // Workaround for java.lang.OutOfMemoryError: Java heap space during compileGroovy phase
 compileGroovy.groovyOptions.fork(memoryMaximumSize: '1024m')
 
+buildscript {
+  repositories {
+      jcenter()
+      mavenCentral()
+  }
+  dependencies {
+      classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
+      classpath 'org.akhikhl.gretty:gretty:+'
+  }
+}
+
 apply plugin: 'war'
-apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 apply plugin: 'maven'
+apply plugin: 'org.akhikhl.gretty'
+apply plugin: 'com.google.cloud.tools.appengine'
 
 group = "edu.harvard.chs"
-version = "0.0.1"
-
-repositories {
-    mavenCentral()
-}
+version = "0.0.1-SNAPSHOT"
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
 dependencies {
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile 'com.google.appengine:appengine:+'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
     compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
@@ -50,6 +65,14 @@ gretty {
       logger.warn 'File filtered: {}', fileDetails.path
       filter(ReplaceTokens, tokens: ['administratorEmail': administratorEmail, 'authorizationTable': authorizationTable, 'capabilitiesUrl': capabilitiesUrl, 'fileCredentialStore': fileCredentialStore, 'validTables': validTables])
     }
+  }
+}
+
+appengine {
+  deploy {   // deploy configuration
+    project = 'lyrical-flame-685'
+    stopPreviousVersion = true  // default - stop the current version
+    promote = true              // default - & make this the current version
   }
 }
 
