@@ -39,8 +39,18 @@ Unlike the CITE Collection Editor, the CITE Collection Manager requires some ser
         http://myapp.appspot.com/
         https://myapp.appspot.com/
 
+## Deploying with the Google App Engine SDK for Java
+
 * Download/unzip/install the [Google App Engine SDK for Java](https://cloud.google.com/appengine/downloads)
 * Run `gradle jettyRunWar` to build/run/test your CITE Collection Manager instance locally
 * Run `gradle explodedWar` to build an exploded WAR
 * Run `appcfg.sh --oauth2 update build/exploded` to upload to Google App Engine (see [Google's *Uploading and Managing a Java App* documentation](https://cloud.google.com/appengine/docs/java/tools/uploadinganapp) for details)
 * Check <http://myapp.appspot.com/> and the App Engine console for your app
+
+## Deploying with the Google App Engine Gradle Plugin
+
+* Download/install the [Google Cloud SDK](https://cloud.google.com/sdk/docs), then do the following one-time setup:
+  * `gcloud components install app-engine-java`
+  * `gcloud config set project myapp` where `myapp` is replaced with what you'll use for e.g. `myapp.appspot.com`
+  * `gcloud auth login`
+* Deploy with `gradle appengineDeploy`
