@@ -70,7 +70,6 @@ gretty {
 
 appengine {
   deploy {   // deploy configuration
-    project = 'lyrical-flame-685'
     stopPreviousVersion = true  // default - stop the current version
     promote = true              // default - & make this the current version
   }
