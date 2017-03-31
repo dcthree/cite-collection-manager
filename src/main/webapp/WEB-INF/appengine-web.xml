@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+  <threadsafe>true</threadsafe>
+
+  <static-files> 
+    <exclude path="/authtable" />
+    <exclude path="/createauth" />
+    <exclude path="/editor" />
+    <exclude path="/home" />
+    <exclude path="/oauth2callback" />
+    <exclude path="/query" />
+    <exclude path="/*.groovy" />
+  </static-files> 
+</appengine-web-app>
