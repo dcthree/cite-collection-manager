@@ -64,7 +64,7 @@ if((user_access_token != null) && (!user_access_token.equals("null"))) {
       if(valid_sql(sql)) {
         log.info("Proxying on behalf of " + userinfo.getEmail() + ": " + sql)
 
-        Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+        Credential credential = CodeFlow.instance.credential
 
         Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
         Sqlresponse response = fusiontables.query().sql(sql).execute()

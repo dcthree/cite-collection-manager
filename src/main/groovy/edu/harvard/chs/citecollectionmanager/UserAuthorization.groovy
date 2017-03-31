@@ -71,7 +71,7 @@ class UserAuthorization {
   public UserAuthorization(Userinfoplus user) {
     log.finer("Creating UserAuthorization")
     this.user = user
-    credential = CodeFlow.instance.build().loadCredential('administrator')
+    credential = CodeFlow.instance.credential
     fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
     this.createUserInTable()
   }

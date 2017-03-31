@@ -12,7 +12,7 @@ if (CodeFlow.instance.authorized()) {
 \$(document).ready(function() {
   \$('#create_table').click(function() {
     \$('#create_table').off('click');
-    \$.ajax("https://www.googleapis.com/fusiontables/v1/tables?access_token=${CodeFlow.instance.build().loadCredential('administrator').getAccessToken()}",{
+    \$.ajax("https://www.googleapis.com/fusiontables/v1/tables?access_token=${CodeFlow.instance.credential.getAccessToken()}",{
         type: 'POST',
         dataType: 'json',
         crossDomain: true,

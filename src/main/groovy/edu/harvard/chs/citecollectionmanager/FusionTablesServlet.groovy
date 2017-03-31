@@ -38,7 +38,7 @@ public class FusionTablesServlet extends HttpServlet {
     UserAuthorization user_authorization = new UserAuthorization(userinfo)
 
     if(user_authorization.authorized()) {
-      Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+      Credential credential = CodeFlow.instance.credential
       String table_id = request.getRequestURL().toString().split("/").last()
       Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
 

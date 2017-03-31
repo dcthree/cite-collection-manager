@@ -19,7 +19,7 @@ import groovy.xml.MarkupBuilder
 StringWriter writer = new StringWriter()
 MarkupBuilder home = new MarkupBuilder(writer)
 
-Credential credential = CodeFlow.instance.build().loadCredential('administrator')
+Credential credential = CodeFlow.instance.credential
 Fusiontables fusiontables = new Fusiontables.Builder(CodeFlow.HTTP_TRANSPORT, CodeFlow.JSON_FACTORY, credential).setApplicationName("cite-collection-manager").build()
 TableList list = fusiontables.table().list().execute()
 

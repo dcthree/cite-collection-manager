@@ -34,10 +34,6 @@ if (CodeFlow.instance.authorized()) {
   }
 }
 else {
-  if (CodeFlow.instance.secrets == null) {
-    CodeFlow.instance.setSecrets(getClass().getClassLoader())
-  }
-
   def onload = """
 \$(document).ready(function() {
   var oauth2callback = window.location.href.replace(/\\/home\$/,'/') + 'oauth2callback';
