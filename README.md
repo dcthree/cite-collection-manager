@@ -54,3 +54,7 @@ Unlike the CITE Collection Editor, the CITE Collection Manager requires some ser
 * Run `gradle explodedWar` to build an exploded WAR
 * Run `appcfg.sh --oauth2 update build/exploded` to upload to Google App Engine (see [Google's *Uploading and Managing a Java App* documentation](https://cloud.google.com/appengine/docs/java/tools/uploadinganapp) for details)
 * Check <http://myapp.appspot.com/> and the App Engine console for your app
+
+## Using a Service Account
+
+The CITE Collection Manager has support for using [an App Engine Service Account](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) to do the Fusion Tables request proxying. This enables you to spin up new instances of the service without having to manually log in in order for the server to store your credential. To use this feature, go to [the Service accounts page for your App Engine project](https://console.developers.google.com/permissions/serviceaccounts) and create a key for your App Engine default service account. When prompted, select JSON instead of P12, and copy the resulting JSON file download to `src/main/resources/edu/harvard/chs/citecollectionmanager/service_account.json`. You'll also need to share editing permissions on your Fusion Tables (including any authorization tables) with the email address for the service account, e.g. `myapp@appspot.gserviceaccount.com`. If a `service_account.json` file is present, the CITE Collection Manager will try to use it instead of any interactive authentication.
