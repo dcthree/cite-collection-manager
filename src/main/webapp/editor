@@ -24,6 +24,17 @@ print """<!DOCTYPE html>
 <link href="cite-collection-editor/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"></link>
 <link href="cite-collection-editor/vendor/pagedown-bootstrap/Markdown.Editor.css" rel="stylesheet"></link>
 <link href="cite-collection-editor/vendor/chosen/chosen.css" rel="stylesheet"></link>
+<style media="screen">
+  div#prefs {
+    position: absolute;
+    top: 15px;
+    right: 150px;
+  }
+  label.prefs {
+    display: inline;
+    font-weight:bold;
+  }
+</style>
 </head>
 <body>
   <script type="text/javascript">
@@ -40,7 +51,35 @@ print """
   </script>
   <div class="container">
     <h1>CITE Collection Editor</h1>
+    <div id="prefs">
+      <form action="index.html" method="post">
+        <label class="prefs" for="TLGtype">TLG Subscription Type:</label>
+        <select id="TLGtype" name="TLGtype">
+          <option value="institutional" selected>Institutional</option>
+          <option value="personal">Personal</option>
+        </select>
+      </form>
+    </div>
   </div>
+  <script type="text/javascript">
+    var tlg = window.localStorage.getItem("TLGtype");
+    var tlg_uri = {"personal": "http://stephanus.tlg.uci.edu/index.php", "institutional": "http://stephanus.tlg.uci.edu/Iris/inst/browser.jsp"};
+    if (tlg) {
+      \$("#TLGtype").children("option").removeAttr("selected");
+      \$("#TLGtype").children("option").each(function(i, elt){
+        if (\$(elt).attr("value") == tlg) {
+          \$(elt).attr("selected", "true");
+        }
+      });
+    } else {
+      tlg = \$("#TLGtype").children("option:selected").attr("value");
+      window.localStorage.setItem("TLGtype", tlg);
+    }
+    \$("#TLGtype").change(function(evt){
+      tlg = \$("#TLGtype").children("option:selected").attr("value");
+      window.localStorage.setItem("TLGtype", tlg);
+    });
+  </script>
 </body>
 </html>
 """
