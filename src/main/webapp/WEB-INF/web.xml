@@ -9,11 +9,13 @@
     <servlet>
       <servlet-name>GroovyServlet</servlet-name>
       <servlet-class>groovy.servlet.GroovyServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
       <servlet-name>FusionTablesServlet</servlet-name>
       <servlet-class>edu.harvard.chs.citecollectionmanager.FusionTablesServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
